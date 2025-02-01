@@ -18,23 +18,27 @@ function App() {
     }
   }, [id, navigate]);
 
-  const loadData = async () => {
-    const res = await axios.get(`${config.apiUrl}/api/3d-model?id=${id}`)
-    console.log(res.data)
-    setRes({
-      image:{
-        url: res.data.options[0].image
-      },
-      logo: {
-        url: res.data.logo
-      },
-      title: res.data.title
-    })
-  }
-
   useEffect(() => {
-    loadData()
-  },[])
+    async function fetchData() {
+      try {
+        const response = await axios.get(`${config.apiUrl}/api/3d-model?id=${id}`);
+        console.log(response.data);
+        setRes({
+          image: {
+            url: response.data.options[0].image,
+          },
+          logo: {
+            url: response.data.logo,
+          },
+          title: response.data.title,
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle error appropriately, maybe set an error state to display to the user
+      }
+    }
+    fetchData();
+  }, [id]); // Add `id` as a dependency since the API call depends on it
 
   return (
     <>
