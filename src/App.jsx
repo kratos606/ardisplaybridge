@@ -25,7 +25,7 @@ function App() {
         console.log(response.data);
         setRes({
           image: {
-            url: response.data.options[0].image,
+            url: response.data.options[0].image || response.data.options[0].posterFileUrl,
           },
           logo: {
             url: response.data.logo,
