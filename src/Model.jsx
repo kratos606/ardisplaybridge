@@ -3,20 +3,42 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const Model = () => {
   const errorViewer = useRef(null);
-  const [res, setRes] = useState([])
+  const [res, setRes] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // Redirect if not on mobile
   useEffect(() => {
-    if (
-      !/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
-    ) {
+    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
       return navigate(`/${id}`);
     }
-  }, [])
+  }, [navigate, id]);
+
+  // Set a CSS variable for the viewport height
+  useEffect(() => {
+    const setVh = () => {
+      // Calculate 1% of the viewport height
+      const vh = window.innerHeight * 0.01;
+      // Set the value in the --vh custom property on the root document
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    // Initial setting of --vh
+    setVh();
+
+    // Update the value on resize
+    window.addEventListener("resize", setVh);
+    return () => {
+      window.removeEventListener("resize", setVh);
+    };
+  }, []);
 
   return (
-    <div className="h-[100vh] w-[100vw] mobile-view overflow-hidden">
+    // Instead of h-[100vh], we use inline styling that computes the height using --vh.
+    <div
+      className="w-[100vw] mobile-view overflow-hidden"
+      style={{ height: "calc(var(--vh, 1vh) * 100)" }}
+    >
       <div className="w-full h-full model-preview">
         <div className="h-full w-full flex bg-purple-950 flex-col justify-around items-center">
           <a
