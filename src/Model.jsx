@@ -59,7 +59,7 @@ const Model = () => {
             alt="model"
           />
           <div className="mb-6">
-            <ardisplay-viewer src={id}></ardisplay-viewer>
+            <ardisplay-viewer src={id} ar-button></ardisplay-viewer>
           </div>
           <div className="bg-slate-400 w-full flex justify-center items-center">
             <span className="text-white text-sm font-light">Powered by</span>
