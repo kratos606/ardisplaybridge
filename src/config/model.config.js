@@ -1,3 +1,3 @@
 export const config = {
-    apiUrl: "https://v2.ardisplay.io"
+    apiUrl: "https://ardisplayboilerplate.vercel.app"
 };
