@@ -1,6 +1,4 @@
-export const config = {
-  matcher: "/:id*",
-};
+export const config = { matcher: "/:id*" };
 
 export default async function middleware(req) {
   // Check if the user-agent is one of the known social media crawlers
@@ -43,42 +41,39 @@ export default async function middleware(req) {
   }
 
   // Extract the necessary fields from the data.
-  // We assume the data structure has options[0].posterFileUrl for the poster,
-  // a 'logo' field, and a 'title' field.
   const posterImage = modelData?.options?.[0]?.posterFileUrl || "";
   const logoImage = modelData?.logo || "";
   const title = modelData?.title || "View Our Model";
   const description = `Check out the model: ${title}`;
 
   // Create an HTML response with the meta tags for social crawlers.
-  // You can add or adjust meta tags (including Twitter meta tags) as needed.
-  const html = `
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>${title}</title>
-          <meta name="title" content="${title}" />
-          <meta name="description" content="${description}" />
-          <meta property="og:title" content="${title}" />
-          <meta property="og:description" content="${description}" />
-          <meta property="og:image" content="${posterImage}" />
-          <meta property="og:url" content="${origin}${pathname}" />
-          <meta property="og:type" content="article" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="${title}" />
-          <meta name="twitter:description" content="${description}" />
-          <meta name="twitter:image" content="${posterImage}" />
-        </head>
-        <body>
-          <!-- Optionally, you can include a visual element as a fallback -->
-          <img src="${posterImage}" alt="Model Poster" style="max-width:100%;"/>
-        </body>
-      </html>
-    `;
+  const html = `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>${title}</title>
+    <meta name="title" content="${title}" />
+    <meta name="description" content="${description}" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:image" content="${posterImage}" />
+    <meta property="og:url" content="${origin}${pathname}" />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${title}" />
+    <meta name="twitter:description" content="${description}" />
+    <meta name="twitter:image" content="${posterImage}" />
+  </head>
+  <body>
+    <!-- Optionally, you can include a visual element as a fallback -->
+    <img src="${posterImage}" alt="Model Poster" style="max-width:100%;"/>
+  </body>
+  </html>`;
 
   // Return the custom HTML response to the crawler
   return new Response(html, {
-    headers: { "Content-Type": "text/html" },
+    headers: {
+      "Content-Type": "text/html",
+    },
   });
 }
