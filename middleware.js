@@ -1,3 +1,4 @@
+// middleware.js (Next.js project)
 export const config = { matcher: "/:id*" };
 
 export default async function middleware(req) {
@@ -12,8 +13,7 @@ export default async function middleware(req) {
     return;
   }
 
-  // Extract the model id from the URL path
-  // For instance, if the URL is https://example.com/123 then id === "123".
+  // Extract the model id from the URL path. For instance, if the URL is https://example.com/123 then id === "123".
   const { pathname, origin } = req.nextUrl;
   const segments = pathname.split("/").filter(Boolean);
   const id = segments[0];
@@ -22,11 +22,10 @@ export default async function middleware(req) {
     return;
   }
 
-  // Define your API endpoint (update this URL as needed).
-  // This assumes your API expects a query parameter "id".
+  // Define your API endpoint (update this URL as needed) – note the use of backticks!
   const apiEndpoint = `https://ardisplayboilerplate.vercel.app/api/3d-model?id=${id}`;
 
-  // Fetch the data from your API using the native fetch.
+  // Fetch the data from your API using the native fetch
   let modelData;
   try {
     const apiRes = await fetch(apiEndpoint);
@@ -41,6 +40,8 @@ export default async function middleware(req) {
   }
 
   // Extract the necessary fields from the data.
+  // We assume the data structure has options[0].posterFileUrl for the poster,
+  // a 'logo' field, and a 'title' field.
   const posterImage = modelData?.options?.[0]?.posterFileUrl || "";
   const logoImage = modelData?.logo || "";
   const title = modelData?.title || "View Our Model";
@@ -48,9 +49,9 @@ export default async function middleware(req) {
 
   // Create an HTML response with the meta tags for social crawlers.
   const html = `<!DOCTYPE html>
-  <html lang="en">
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>${title}</title>
     <meta name="title" content="${title}" />
     <meta name="description" content="${description}" />
@@ -65,15 +66,13 @@ export default async function middleware(req) {
     <meta name="twitter:image" content="${posterImage}" />
   </head>
   <body>
-    <!-- Optionally, you can include a visual element as a fallback -->
-    <img src="${posterImage}" alt="Model Poster" style="max-width:100%;"/>
+    <!-- Optionally, include a visual fallback element -->
+    <img src="${posterImage}" alt="Model Poster" style="max-width:100%;" />
   </body>
-  </html>`;
+</html>`;
 
   // Return the custom HTML response to the crawler
   return new Response(html, {
-    headers: {
-      "Content-Type": "text/html",
-    },
+    headers: { "Content-Type": "text/html" },
   });
 }
